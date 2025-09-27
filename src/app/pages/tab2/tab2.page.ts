@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Article } from 'src/app/interfaces';
+import { News } from 'src/app/services/news';
 
 @Component({
   selector: 'app-tab2',
@@ -6,22 +8,28 @@ import { Component } from '@angular/core';
   styleUrls: ['tab2.page.scss'],
   standalone: false,
 })
-export class Tab2Page {
+export class Tab2Page implements OnInit {
 
-  public categories: string [] = ['business',
-                                'entertainment',
-                                'general',
-                                'health',
-                                'science',
-                                'sports',
-                                'technology'];
-
+  public categories: string [] = ['business', 'entertainment','general', 'health', 'science', 'sports', 'technology'];
   public selectedCategory: string = this.categories[0];
+  public articles: Article[] = [];
 
-  constructor() {}
 
-  segmentChanged(category: any) {
-    console.log(category);
+  constructor(private newsService: News) {}
+
+  ngOnInit() {
+    this.newsService.getTopHeadLinesByCategory(this.selectedCategory)
+    .subscribe(articles => {
+      this.articles = [ ...articles ];
+    });
+  }
+
+  segmentChanged(event: any) {
+    this.selectedCategory = event.detail.value;
+    this.newsService.getTopHeadLinesByCategory(this.selectedCategory)
+    .subscribe(articles => {
+      this.articles = [ ...articles ];
+    });
   }
 
 
