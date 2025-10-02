@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { Article, ArticlesByCategoryAndPage, NewsResponse } from '../interfaces';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs';
+import { storedArticlesByCategory } from '../data/mock-news';
 
 const apiKey = environment.apiKey;
 const apiUrl = environment.apiUrl;
@@ -16,7 +17,7 @@ const apiUrl = environment.apiUrl;
 })
 export class News {
 
-  private articlesByCategoryAndPage: ArticlesByCategoryAndPage = {}
+  private articlesByCategoryAndPage: ArticlesByCategoryAndPage = storedArticlesByCategory;
 
 
   constructor(private http: HttpClient) { }
@@ -35,21 +36,22 @@ export class News {
 
   getTopHeadLines():Observable<Article[]>{
 
-    return this.getArticlesByCategory('business');
+    return of(this.articlesByCategoryAndPage['business'].articles);
 
   }
 
   getTopHeadLinesByCategory(category: string, loadMore: boolean = false):Observable<Article[]>{
 
-    if(loadMore){
-      return this.getArticlesByCategory(category);
-    }
+    return of(this.articlesByCategoryAndPage[category].articles);
 
-    if( this.articlesByCategoryAndPage[category]){
-      return of(this.articlesByCategoryAndPage[category].articles);
-    }
+    // if(loadMore){
+    //   return this.getArticlesByCategory(category);
+    // }
 
-    return this.getArticlesByCategory(category);
+    // if( this.articlesByCategoryAndPage[category]){
+    // }
+
+    // return this.getArticlesByCategory(category);
 
   }
 

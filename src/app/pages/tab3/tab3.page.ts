@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Article } from 'src/app/interfaces';
+import { Storage } from '@ionic/storage-angular';
+import { StorageService } from '../../services/store.service';
 
 @Component({
   selector: 'app-tab3',
@@ -8,6 +11,10 @@ import { Component } from '@angular/core';
 })
 export class Tab3Page {
 
-  constructor() {}
+  get articles(): Article[]{
+    return this.storageService.getLocalArticles
+  }
+
+  constructor(private storageService: StorageService) {}
 
 }
